@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="EMPTY_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/00-Hello/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/00-hello_cargo/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/01-guessing_game/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/02-basics/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/03-loops/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/04-ownership/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/05-structs/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/06-enums/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/07-packages/restaurant/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/07-packages/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/08-collections/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/09-error-handling/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/00-Hello/target" />
+      <excludeFolder url="file://$MODULE_DIR$/00-hello_cargo/target" />
+      <excludeFolder url="file://$MODULE_DIR$/01-guessing_game/target" />
+      <excludeFolder url="file://$MODULE_DIR$/02-basics/target" />
+      <excludeFolder url="file://$MODULE_DIR$/03-loops/target" />
+      <excludeFolder url="file://$MODULE_DIR$/04-ownership/target" />
+      <excludeFolder url="file://$MODULE_DIR$/05-structs/target" />
+      <excludeFolder url="file://$MODULE_DIR$/06-enums/target" />
+      <excludeFolder url="file://$MODULE_DIR$/07-packages/restaurant/target" />
+      <excludeFolder url="file://$MODULE_DIR$/07-packages/target" />
+      <excludeFolder url="file://$MODULE_DIR$/08-collections/target" />
+      <excludeFolder url="file://$MODULE_DIR$/09-error-handling/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
