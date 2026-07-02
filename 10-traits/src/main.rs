@@ -154,6 +154,51 @@ impl<T: ToString> Packable for T {
         format!("this is packable! {}", self.to_string())
     }
 }
+// ..............
+// LIFETIMES
+// ..............
+
+// This does NOT compile! This because we can determine the lifetime of the output, since it can be
+// either one of x or y
+// fn longest(x: &str, y: &str) -> &str {
+//     if x.len() > y.len() { x } else { y }
+// }
+
+// We want to express the following concept:
+// "The returned value will be valid as long as the two arguments are valid"
+// For this we use a Lifetime parameter: `a`
+// we declare it as for generics and we use the lifetime parameter after the `&`
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() { x } else { y }
+}
+
+// this is valid, since we use the result when both the arguments are valid
+fn test_lifetimes() {
+    let string1 = String::from("long string is long");
+
+    {
+        let string2 = String::from("xyz");
+        let result = longest(string1.as_str(), string2.as_str());
+        println!("The longest string is {result}");
+    }
+}
+
+// This is NOT valid! The `string2` does not live long enough
+// fn test_invalid() {
+//     let string1 = String::from("long string is long");
+//     let result;
+//     {
+//         let string2 = String::from("xyz");
+//         result = longest(string1.as_str(), string2.as_str());
+//     }
+//     println!("The longest string is {result}");
+// }
+
+// lifetimes can be used also with structs
+// This tells the compiler an instance of `Test` can't outlive the reference inside
+struct Test<'a> {
+    txt: &'a str
+}
 
 fn main() {
     let list1 = vec![1, 2, 5, 1000];
