@@ -84,7 +84,7 @@ cargo fmt --check --manifest-path 00-hello_cargo/Cargo.toml
 
 ```bash
 cargo check --manifest-path 00-hello_cargo/Cargo.toml
-cargo test --manifest-path 00-hello_cargo/Cargo.toml
+cargo tests --manifest-path 00-hello_cargo/Cargo.toml
 ```
 
 Replace `01-hello_cargo` with any other project folder in this repo.
