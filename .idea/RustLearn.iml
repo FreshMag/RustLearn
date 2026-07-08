@@ -17,6 +17,8 @@
       <sourceFolder url="file://$MODULE_DIR$/10-traits/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/11-testing/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/11-testing/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/12-io-project/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/12-minigrep/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/00-Hello/target" />
       <excludeFolder url="file://$MODULE_DIR$/00-hello_cargo/target" />
       <excludeFolder url="file://$MODULE_DIR$/01-guessing_game/target" />
@@ -31,6 +33,8 @@
       <excludeFolder url="file://$MODULE_DIR$/09-error-handling/target" />
       <excludeFolder url="file://$MODULE_DIR$/10-traits/target" />
       <excludeFolder url="file://$MODULE_DIR$/11-testing/target" />
+      <excludeFolder url="file://$MODULE_DIR$/12-io-project/target" />
+      <excludeFolder url="file://$MODULE_DIR$/12-minigrep/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
