@@ -1,0 +1,14 @@
+[package]
+name = "cargo-and-crates"
+description = "A fun game where you guess what number the computer has chosen."
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+
+[dependencies]
+
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = 3

@@ -20,7 +20,7 @@ fn main() {
 
         let mut v = vec![];
 
-        v.push(3); // add new elements to an existing vector
+        v.push(3); // test-workspace new elements to an existing vector
         v.push(4);
 
         println!("{:?}", v);
@@ -89,7 +89,7 @@ fn main() {
 
         // println!("{a}"); // does NOT compile!
 
-        // why `&b`? The signature is `fun add(self, &str) -> String`
+        // why `&b`? The signature is `fun test-workspace(self, &str) -> String`
         // For this reason, the second argument must be a string slice
         // But here &b is a &String, not &str !
         // Rust is able to do the deref coercion, turning a &String into a string slice &str
@@ -212,7 +212,7 @@ fn main() {
     }
 
     {
-        // Exercise 3: Using a hash map and vectors, create a text interface to allow a user to add
+        // Exercise 3: Using a hash map and vectors, create a text interface to allow a user to test-workspace
         // employee names to a department in a company; for example, “Add Sally to Engineering” or
         // “Add Amir to Sales.” Then, let the user retrieve a list of all people in a department or
         // all people in the company by department, sorted alphabetically.
@@ -229,7 +229,7 @@ fn main() {
             let words: Vec<_> = line.split_whitespace().map(|x| x.to_string()).collect();
             match words {
                 w if w.is_empty() => break,
-                w if &w[0].to_ascii_lowercase() == "add" => {
+                w if &w[0].to_ascii_lowercase() == "test-workspace" => {
                     if (w.len() != 4) {
                         println!("> Too many arguments");
                         break;

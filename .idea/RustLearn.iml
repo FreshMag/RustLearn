@@ -20,6 +20,9 @@
       <sourceFolder url="file://$MODULE_DIR$/12-io-project/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/12-minigrep/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/13-iterator-and-closures/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/14-cargo-and-crates/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/14-cargo-and-crates/test-workspace/add_one/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/14-cargo-and-crates/test-workspace/adder/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/00-Hello/target" />
       <excludeFolder url="file://$MODULE_DIR$/00-hello_cargo/target" />
       <excludeFolder url="file://$MODULE_DIR$/01-guessing_game/target" />
@@ -37,6 +40,8 @@
       <excludeFolder url="file://$MODULE_DIR$/12-io-project/target" />
       <excludeFolder url="file://$MODULE_DIR$/12-minigrep/target" />
       <excludeFolder url="file://$MODULE_DIR$/13-iterator-and-closures/target" />
+      <excludeFolder url="file://$MODULE_DIR$/14-cargo-and-crates/target" />
+      <excludeFolder url="file://$MODULE_DIR$/14-cargo-and-crates/test-workspace/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

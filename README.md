@@ -65,7 +65,7 @@ cargo update --manifest-path 00-hello_cargo/Cargo.toml
 Install rustfmt (once per toolchain):
 
 ```bash
-rustup component add rustfmt
+rustup component test-workspace rustfmt
 ```
 
 Format source files:
