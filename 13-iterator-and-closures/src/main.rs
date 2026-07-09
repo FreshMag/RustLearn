@@ -1,4 +1,5 @@
-use std::thread;
+use std::{env, fs, process, thread};
+use std::error::Error;
 
 fn main() {
 
@@ -162,4 +163,92 @@ fn main() {
         r.width
     });
     println!("{list:#?}, sorted in {num_sort_operations} operations");
+
+    // ITERATORS --------------------------------------------------------------------
+
+    let v1 = vec![1, 2, 3];
+
+    let v1_iter = v1.iter();  // iterators are lazy!
+
+    for v in v1_iter { // under the hood: took ownership of v1_iter and made it mutable
+        println!("{v:?}")
+    }
+
+    let v2 = vec![1, 2];
+    let mut v2_iter = v2.iter();  // it's `mut`, cause it changes the internal state
+
+    println!("{:?}", v2_iter.next());  // Some(&1)
+    println!("{:?}", v2_iter.next());  // Some(&2)
+    println!("{:?}", v2_iter.next());  // None
+
+    let sum: i32 = v2.iter().sum();
+    println!("{:?}", sum); // consumes the iterator, we cannot use it afterward
+
+    // Iterator methods that produce other iterators
+
+    let _ = v2.iter().map(|x| x + 1);  // this DOES NOTHING UNTIL THE ITERATOR IS CONSUMED
+
+    // for example
+    let v3 : Vec<_> = v2.iter().map(|x| x + 1).collect();
+
+    fn less_than(v: Vec<i32>, val: i32) -> Vec<i32> {
+        v.into_iter().filter(|x| x < &val).collect()
+    }
+
+    println!("{:?}", less_than(v3, 3)); // [2]
+
+    // REWORKING Chapter 12 program
+
+    #[derive(Debug)]
+    pub struct Config {
+        pub query: String,
+        pub file_path: String,
+        pub ignore_case: bool
+    }
+
+    impl Config {
+        fn build(
+            mut args: impl Iterator<Item=String>,
+        ) -> Result<Config, &'static str> {
+            args.next();
+
+            let query = match args.next() {
+                None => return Err("Not enough arguments! At least 2 is expected!"),
+                Some(v) => v
+            };
+            let file_path = match args.next() {
+                None => return Err("Not enough arguments! At least 2 is expected!"),
+                Some(v) => v
+            };
+            let ignore_case = env::var("IGNORE_CASE").is_ok();
+
+            Ok(Config { query, file_path, ignore_case })
+        }
+    };
+
+    let config = Config::build(env::args()).unwrap_or_else(|err| {
+        eprintln!("Problem parsing arguments: {err}");
+        process::exit(1);
+    });
+
+    fn run(conf: Config) -> Result<(), Box<dyn Error>> {  // this indicates that the function returns a type that implements the Error trait
+        let content = fs::read_to_string(conf.file_path)?; // `dyn` stands for "dynamic", because we don't know the exact type
+
+        pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+            contents.lines()
+                .into_iter()
+                .filter(|x| x.contains(query))
+                .collect()
+        }
+        // ...
+
+        let res = search(&conf.query, &content);
+
+        for line in res {
+            println!("{line}");
+        }
+
+        Ok(())
+    }
+
 }
