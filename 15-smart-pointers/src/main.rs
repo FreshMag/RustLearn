@@ -1,5 +1,6 @@
-use std::cell::RefCell;
+use std::cell::{Ref, RefCell};
 use std::ops::Deref;
+use std::rc::Weak;
 
 fn main() {
     // Box is a kind of smart pointer used for storing data on the heap
@@ -21,24 +22,25 @@ fn main() {
 
     // For this reason, a `Box` pointer to the heap is necessary. Since it essentially occupies the size
     // of a pointer (an i32 essentially), the `List` appears to have fixed size
+    {
+        enum List<T> {
+            Cons(T, Box<List<T>>), // here, `Box` performs an *indirection*, meaning it does not store the value directly
+            Nil,
+        }
+        use List::{Cons, Nil};
 
-    enum List<T> {
-        Cons(T, Box<List<T>>), // here, `Box` performs an *indirection*, meaning it does not store the value directly
-        Nil,
+        let _l = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
+
+        fn cons(v: i32, tail: Box<List<i32>>) -> Box<List<i32>> {
+            Box::new(Cons(v, tail))
+        }
+
+        fn nil() -> Box<List<i32>> {
+            Box::new(Nil)
+        }
+
+        let _l2 = cons(1, cons(2, cons(3, nil())));
     }
-    use List::{Cons, Nil};
-
-    let _l = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
-
-    fn cons(v: i32, tail: Box<List<i32>>) -> Box<List<i32>> {
-        Box::new(Cons(v, tail))
-    }
-
-    fn nil() -> Box<List<i32>> {
-        Box::new(Nil)
-    }
-
-    let _l2 = cons(1, cons(2, cons(3, nil())));
 
     // Box<T> implements two Trait that enables Rust to create Smart Pointers:
     // - `Deref` : allows values like Box<T> to be treated like references
@@ -182,9 +184,27 @@ fn main() {
 
     // If we try to use Box<T> here, we'll fail
 
-    let a = cons(5, cons(10, nil()));
-    let b = cons(3, a);
-    // let c = cons(4, a);  // using a value after it being moved
+    {
+        enum List<T> {
+            Cons(T, Box<List<T>>),
+            Nil,
+        }
+        use List::{Cons, Nil};
+
+        let _l = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
+
+        fn cons(v: i32, tail: Box<List<i32>>) -> Box<List<i32>> {
+            Box::new(Cons(v, tail))
+        }
+
+        fn nil() -> Box<List<i32>> {
+            Box::new(Nil)
+        }
+
+        let a = cons(5, cons(10, nil()));
+        let b = cons(3, a);
+        // let c = cons(4, a);  // using a value after it being moved
+    }
 
     // We could change the definition of Cons to hold references instead, but then we would have to
     // specify lifetime parameters. By specifying lifetime parameters, we would be specifying that
@@ -323,7 +343,7 @@ fn main() {
 
     impl Messenger for MockMessenger {
         fn send(&self, message: &str) {
-            self.sent_messages.borrow_mut().push(String::from(message));  // this becomes mutable!
+            self.sent_messages.borrow_mut().push(String::from(message)); // this becomes mutable!
         }
     }
 
@@ -366,7 +386,6 @@ fn main() {
     // If we try to violate these rules, rather than getting a compiler error as we would with
     // references, the implementation of RefCell<T> will panic at runtime.
 
-
     // We can do some crazy stuff with RefCell
 
     #[derive(Debug)]
@@ -387,4 +406,123 @@ fn main() {
     println!("a after = {a:?}");
     println!("b after = {b:?}"); // the value of `a` changed here too, even if we declared it as mutable!
     println!("c after = {c:?}");
+
+    // --------------------------------------------------------------------------------
+
+    // Reference Cycles
+
+    // In Rust is difficult but not impossible to create reference cycles, which would lead to
+    // reference counts to never drop to 0, causing a *memory leak*, since the data referenced is
+    // never dropped.
+
+    // As an example, look at this alternative version of the cons List
+
+    {
+        #[derive(Debug)]
+        enum List {
+            Cons(i32, RefCell<Rc<List>>),
+            Nil,
+        }
+        use List::{Cons, Nil};
+
+        impl List {
+            fn tail(&self) -> Option<&RefCell<Rc<List>>> {
+                match self {
+                    Cons(_, item) => Some(item),
+                    Nil => None,
+                }
+            }
+        }
+
+        let a = Rc::new(Cons(5, RefCell::new(Rc::new(Nil))));
+
+        println!("a initial rc count = {}", Rc::strong_count(&a));
+        println!("a next item = {:?}", a.tail());
+
+        let b = Rc::new(Cons(10, RefCell::new(Rc::clone(&a))));
+
+        println!("a rc count after b creation = {}", Rc::strong_count(&a));
+        println!("b initial rc count = {}", Rc::strong_count(&b));
+        println!("b next item = {:?}", b.tail());
+
+        if let Some(link) = a.tail() {
+            *link.borrow_mut() = Rc::clone(&b);
+        }
+
+        println!("b rc count after changing a = {}", Rc::strong_count(&b));
+        println!("a rc count after changing a = {}", Rc::strong_count(&a));
+
+        // Uncomment the next line to see that we have a cycle;
+        // it will overflow the stack.
+        // println!("a next item = {:?}", a.tail());
+    }
+
+    // To handle this problem, Rust offers a `Weak` trait. The Rc<T> has a concept of **weak references**.
+    // Essentially, two separate counts are maintained on the Rc side:
+    // - Strong references
+    // - Weak references
+    // Calling `.downgrade()` on a Rc gives a *weak* reference. The data referenced by a Rc is freed
+    // once the *strong* references drop to 0, even if some weak references remain.
+    // For this reason, when getting the value referenced by a *weak* reference, by the `.upgrade()`
+    // method, we get a `Option<Rc<T>>`, that is equal to `Some` only if the data reference hasn't
+    // been dropped yet.
+
+    // Let's create a Tree data-structure following this mechanism, where each node knows only of
+    // its parent and their children
+    {
+        struct Node {
+            value: i32,
+            children: RefCell<Vec<Rc<Node>>>, // we use Rc because we want Nodes to own their children
+                                              // and share this ownership with variables
+        }
+
+        let leaf = Rc::new(Node {
+            value: 5,
+            children: RefCell::new(vec![]) // no children
+        });
+
+        let branch = Rc::new(Node {
+            value: 10,
+            children: RefCell::new(vec![Rc::clone(&leaf)])
+        });
+
+        // at this point, however, nodes don't have knowledge of their parents. Let's add that.
+    }
+
+    {
+        // We could add a `parent: RefCell<Rc<...>>`, but this would create a cycle!
+
+        // leaf.parent ---> branch
+        //     |             |
+        //    leaf    <--- branch.children
+
+        // Let's think about this: if we drop a parent we most certainly WANT to drop its children,
+        // but if we drop a leaf, we DON'T WANT to drop its parent!
+
+        // This is a natural fit for the `Weak<T>` trait
+
+        #[derive(Debug)]
+        struct Node {
+            value: i32,
+            parent: RefCell<Weak<Node>>,
+            children: RefCell<Vec<Rc<Node>>>
+        }
+
+        let leaf = Rc::new(Node {
+            value: 5,
+            parent: RefCell::new(Weak::new()),
+            children: RefCell::new(vec![])
+        });
+        println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());  // this prints "None"
+
+        let parent = Rc::new(Node {
+            value: 10,
+            parent: RefCell::new(Weak::new()),
+            children: RefCell::new(vec![Rc::clone(&leaf)])
+        });
+
+        *leaf.parent.borrow_mut() = Rc::downgrade(&parent);
+
+        println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+    }
 }
