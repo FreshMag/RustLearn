@@ -26,6 +26,7 @@
       <sourceFolder url="file://$MODULE_DIR$/14-cargo-and-crates/test-workspace/smart-pointers/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/15-smart-pointers/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/16-concurrency/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/17-asynchronous/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/00-Hello/target" />
       <excludeFolder url="file://$MODULE_DIR$/00-hello_cargo/target" />
       <excludeFolder url="file://$MODULE_DIR$/01-guessing_game/target" />
@@ -47,6 +48,7 @@
       <excludeFolder url="file://$MODULE_DIR$/14-cargo-and-crates/test-workspace/target" />
       <excludeFolder url="file://$MODULE_DIR$/15-smart-pointers/target" />
       <excludeFolder url="file://$MODULE_DIR$/16-concurrency/target" />
+      <excludeFolder url="file://$MODULE_DIR$/17-asynchronous/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
